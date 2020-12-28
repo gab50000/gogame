@@ -1,9 +1,8 @@
-package main
+package game
 
 import (
 	"image"
 	"image/color"
-	_ "image/png"
 	"log"
 	"math"
 
@@ -39,13 +38,14 @@ func (game *Game) Draw(screen *ebiten.Image) {
 	maxX, maxY := subimg.Bounds().Max.X, subimg.Bounds().Max.Y
 	centerX, centerY := (minX+maxX)/2, (minY+maxY)/2
 	options.GeoM.Translate(-float64(centerX), -float64(centerY))
-	options.GeoM.Scale(float64(math.Pow(-1, float64(game.count))), 1)
+	i := game.count / 10
+	options.GeoM.Scale(float64(math.Pow(-1, float64(i))), 1)
 	options.GeoM.Translate(float64(centerX), float64(centerY))
 	screen.DrawImage(subimg, &options)
 }
 
 func (game *Game) Layout(outsideWidth, outsideHeight int) (int, int) {
-	return 320, 240
+	return outsideWidth / 8, outsideHeight / 8
 }
 
 func main() {
@@ -62,7 +62,6 @@ func main() {
 	// Sepcify the window size as you like. Here, a doulbed size is specified.
 	ebiten.SetWindowSize(640, 480)
 	ebiten.SetWindowTitle("The Game")
-	ebiten.SetMaxTPS(10)
 	// Call ebiten.RunGame to start your game loop.
 	if err := ebiten.RunGame(&game); err != nil {
 		log.Fatal(err)
