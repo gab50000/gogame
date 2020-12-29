@@ -57,8 +57,8 @@ func (character *Character) Attack(dir direction) {
 
 // Draw bla
 func (character *Character) Draw(screen *ebiten.Image, options *ebiten.DrawImageOptions) {
-	// dir := direction(character.counter % 4)
-	subimg := character.walkSprites[right][(character.counter/character.framesPerStep)%2]
+	dir := direction((character.counter / 200) % 4)
+	subimg := character.walkSprites[dir][(character.counter/character.framesPerStep)%2]
 	fmt.Printf("%v\n", subimg.Bounds())
 	// minX, minY := subimg.Bounds().Min.X, subimg.Bounds().Min.Y
 	// maxX, maxY := subimg.Bounds().Max.X, subimg.Bounds().Max.Y
@@ -100,8 +100,16 @@ func getWalkingSprites() map[direction][]*image.NRGBA {
 	walkRight1 := imaging.FlipH(walkLeft1)
 	walkRight2 := imaging.FlipH(walkLeft2)
 
+	walkUp1 := spriteImage.SubImage(image.Rect(18, 11, 33, 26)).(*image.NRGBA)
+	walkUp2 := imaging.FlipH(walkUp1)
+
+	walkDown1 := spriteImage.SubImage(image.Rect(1, 11, 16, 26)).(*image.NRGBA)
+	walkDown2 := imaging.FlipH(walkDown1)
+
 	walkSprites[left] = []*image.NRGBA{walkLeft1, walkLeft2}
 	walkSprites[right] = []*image.NRGBA{walkRight1, walkRight2}
+	walkSprites[up] = []*image.NRGBA{walkUp1, walkUp2}
+	walkSprites[down] = []*image.NRGBA{walkDown1, walkDown2}
 
 	return walkSprites
 }
@@ -111,22 +119,11 @@ func NewCharacter() *Character {
 	walkSprites := getWalkingSprites()
 	walkSpritesEb := make(map[direction][]*ebiten.Image)
 
-	// walkDown1 := spriteImage.SubImage(image.Rect(1, 11, 16, 26)).(*ebiten.Image)
-	// walkDown2 := ebiten.NewImageFromImage(imaging.FlipH(walkDown1))
-
-	// walkUp1 := spriteImage.SubImage(image.Rect(18, 11, 33, 26)).(*ebiten.Image)
-	// walkUp2 := ebiten.NewImageFromImage(imaging.FlipH(walkUp1))
-
-	for _, dir := range []direction{left, right} {
+	for _, dir := range []direction{left, right, up, down} {
 		for _, sprite := range walkSprites[dir] {
 			walkSpritesEb[dir] = append(walkSpritesEb[dir], ebiten.NewImageFromImage(sprite))
 		}
-
 	}
-
-	// walkSprites[down] = []*ebiten.Image{walkDown1, walkDown2}
-	// walkSprites[up] = []*ebiten.Image{walkUp1, walkUp2}
-	// walkSprites[right] = []*ebiten.Image{walkRight1, walkRight2}
 
 	return &Character{
 		position:      Position{0, 0},
