@@ -1,7 +1,6 @@
 package main
 
 import (
-	"fmt"
 	"image"
 
 	//needed because of ebiten
@@ -20,6 +19,7 @@ const (
 	down
 	left
 	right
+	noDirection
 )
 
 // Position bla
@@ -36,7 +36,7 @@ type Character struct {
 	walkSprites   map[direction][]*ebiten.Image
 	shieldSprites map[direction][]*ebiten.Image
 	attackSprites map[direction][]*ebiten.Image
-	spriteImg     *ebiten.Image
+	lastSprite    *ebiten.Image
 	framesPerStep int
 }
 
@@ -57,12 +57,14 @@ func (character *Character) Attack(dir direction) {
 
 // Draw bla
 func (character *Character) Draw(screen *ebiten.Image, options *ebiten.DrawImageOptions) {
-	dir := direction((character.counter / 200) % 4)
-	subimg := character.walkSprites[dir][(character.counter/character.framesPerStep)%2]
-	fmt.Printf("%v\n", subimg.Bounds())
-	// minX, minY := subimg.Bounds().Min.X, subimg.Bounds().Min.Y
-	// maxX, maxY := subimg.Bounds().Max.X, subimg.Bounds().Max.Y
-	screen.DrawImage(subimg, options)
+	var sprite *ebiten.Image
+	if character.lastSprite == nil {
+		sprite = character.walkSprites[character.dir][(character.counter/10)%2]
+	} else {
+		sprite = character.lastSprite
+	}
+
+	screen.DrawImage(sprite, options)
 }
 
 // Move bla
@@ -72,8 +74,11 @@ func (character *Character) Move(dx, dy int) {
 }
 
 //Update bla
-func (character *Character) Update() {
-	character.counter++
+func (character *Character) Update(dir direction) {
+	if dir != noDirection {
+		character.dir = dir
+		character.counter++
+	}
 }
 
 func imgFromFile(filename string) image.Image {
@@ -94,16 +99,16 @@ func getWalkingSprites() map[direction][]*image.NRGBA {
 	walkSprites := make(map[direction][]*image.NRGBA)
 	spriteImage := imgFromFile("sprites.png").(*image.NRGBA)
 
-	walkLeft1 := spriteImage.SubImage(image.Rect(35, 11, 50, 26)).(*image.NRGBA)
-	walkLeft2 := spriteImage.SubImage(image.Rect(52, 11, 67, 26)).(*image.NRGBA)
+	walkLeft1 := spriteImage.SubImage(image.Rect(35, 11, 51, 27)).(*image.NRGBA)
+	walkLeft2 := spriteImage.SubImage(image.Rect(52, 11, 68, 27)).(*image.NRGBA)
 
 	walkRight1 := imaging.FlipH(walkLeft1)
 	walkRight2 := imaging.FlipH(walkLeft2)
 
-	walkUp1 := spriteImage.SubImage(image.Rect(18, 11, 33, 26)).(*image.NRGBA)
+	walkUp1 := spriteImage.SubImage(image.Rect(18, 11, 34, 27)).(*image.NRGBA)
 	walkUp2 := imaging.FlipH(walkUp1)
 
-	walkDown1 := spriteImage.SubImage(image.Rect(1, 11, 16, 26)).(*image.NRGBA)
+	walkDown1 := spriteImage.SubImage(image.Rect(1, 11, 17, 27)).(*image.NRGBA)
 	walkDown2 := imaging.FlipH(walkDown1)
 
 	walkSprites[left] = []*image.NRGBA{walkLeft1, walkLeft2}
@@ -114,14 +119,43 @@ func getWalkingSprites() map[direction][]*image.NRGBA {
 	return walkSprites
 }
 
-// NewCharacter bla
+func getShieldSprites() map[direction][]*image.NRGBA {
+	spriteImage := imgFromFile("sprites.png").(*image.NRGBA)
+	shieldSprites := make(map[direction][]*image.NRGBA)
+
+	shieldRight1 := spriteImage.SubImage(image.Rect(69, 42, 85, 58)).(*image.NRGBA)
+	shieldRight2 := spriteImage.SubImage(image.Rect(86, 42, 102, 58)).(*image.NRGBA)
+
+	shieldLeft1 := spriteImage.SubImage(image.Rect(35, 11, 51, 27)).(*image.NRGBA)
+	shieldLeft2 := spriteImage.SubImage(image.Rect(52, 11, 68, 27)).(*image.NRGBA)
+
+	shieldUp1 := spriteImage.SubImage(image.Rect(35, 42, 51, 58)).(*image.NRGBA)
+	shieldUp2 := spriteImage.SubImage(image.Rect(52, 42, 68, 58)).(*image.NRGBA)
+
+	shieldDown1 := spriteImage.SubImage(image.Rect(1, 42, 17, 58)).(*image.NRGBA)
+	shieldDown2 := spriteImage.SubImage(image.Rect(18, 42, 34, 58)).(*image.NRGBA)
+
+	shieldSprites[left] = []*image.NRGBA{shieldLeft1, shieldLeft2}
+	shieldSprites[right] = []*image.NRGBA{shieldRight1, shieldRight2}
+	shieldSprites[up] = []*image.NRGBA{shieldUp1, shieldUp2}
+	shieldSprites[down] = []*image.NRGBA{shieldDown1, shieldDown2}
+
+	return shieldSprites
+}
+
+// NewCharacter returns an initialized Character struct
 func NewCharacter() *Character {
 	walkSprites := getWalkingSprites()
+	shieldSprites := getShieldSprites()
 	walkSpritesEb := make(map[direction][]*ebiten.Image)
+	shieldSpritesEb := make(map[direction][]*ebiten.Image)
 
 	for _, dir := range []direction{left, right, up, down} {
 		for _, sprite := range walkSprites[dir] {
 			walkSpritesEb[dir] = append(walkSpritesEb[dir], ebiten.NewImageFromImage(sprite))
+		}
+		for _, sprite := range shieldSprites[dir] {
+			shieldSpritesEb[dir] = append(shieldSpritesEb[dir], ebiten.NewImageFromImage(sprite))
 		}
 	}
 
@@ -129,6 +163,7 @@ func NewCharacter() *Character {
 		position:      Position{0, 0},
 		dir:           up,
 		walkSprites:   walkSpritesEb,
+		shieldSprites: shieldSpritesEb,
 		framesPerStep: 8,
 	}
 }
