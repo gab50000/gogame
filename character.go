@@ -80,6 +80,16 @@ func (character *Character) Update(dir direction) {
 	if dir != noDirection {
 		character.dir = dir
 		character.counter++
+		switch dir {
+		case up:
+			character.Move(0, -1)
+		case down:
+			character.Move(0, 1)
+		case left:
+			character.Move(-1, 0)
+		case right:
+			character.Move(1, 0)
+		}
 	}
 }
 
