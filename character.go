@@ -56,7 +56,9 @@ func (character *Character) Attack(dir direction) {
 }
 
 // Draw bla
-func (character *Character) Draw(screen *ebiten.Image, options *ebiten.DrawImageOptions) {
+func (character *Character) Draw(screen *ebiten.Image) {
+	options := ebiten.DrawImageOptions{}
+	options.GeoM.Translate(float64(character.position.x), float64(character.position.y))
 	var sprite *ebiten.Image
 	if character.lastSprite == nil {
 		sprite = character.walkSprites[character.dir][(character.counter/10)%2]
@@ -64,7 +66,7 @@ func (character *Character) Draw(screen *ebiten.Image, options *ebiten.DrawImage
 		sprite = character.lastSprite
 	}
 
-	screen.DrawImage(sprite, options)
+	screen.DrawImage(sprite, &options)
 }
 
 // Move bla
@@ -144,7 +146,7 @@ func getShieldSprites() map[direction][]*image.NRGBA {
 }
 
 // NewCharacter returns an initialized Character struct
-func NewCharacter() *Character {
+func NewCharacter(pos Position) *Character {
 	walkSprites := getWalkingSprites()
 	shieldSprites := getShieldSprites()
 	walkSpritesEb := make(map[direction][]*ebiten.Image)
@@ -160,7 +162,7 @@ func NewCharacter() *Character {
 	}
 
 	return &Character{
-		position:      Position{0, 0},
+		position:      pos,
 		dir:           up,
 		walkSprites:   walkSpritesEb,
 		shieldSprites: shieldSpritesEb,

@@ -1,8 +1,6 @@
 package main
 
 import (
-	"log"
-
 	"github.com/hajimehoshi/ebiten/v2"
 )
 
@@ -26,6 +24,5 @@ func whichKeyPressed(game *Game) direction {
 			}
 		}
 	}
-	log.Println("No key pressed")
 	return noDirection
 }
