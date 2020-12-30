@@ -22,8 +22,9 @@ type Figure interface {
 
 // Update bla
 func (game *Game) Update() error {
+	dir := whichKeyPressed(game)
 	game.count++
-	game.fig.Update()
+	game.fig.Update(dir)
 	return nil
 }
 
@@ -31,12 +32,13 @@ func (game *Game) Update() error {
 func (game *Game) Draw(screen *ebiten.Image) {
 	options := ebiten.DrawImageOptions{}
 	screen.Fill(color.RGBA{0, 255, 255, 255})
+	options.GeoM.Translate(float64(screen.Bounds().Max.X/2), float64(screen.Bounds().Max.Y/2))
 	game.fig.Draw(screen, &options)
 }
 
 // Layout bla
 func (game *Game) Layout(outsideWidth, outsideHeight int) (int, int) {
-	return outsideWidth / 8, outsideHeight / 8
+	return outsideWidth / 4, outsideHeight / 4
 }
 
 func main() {
