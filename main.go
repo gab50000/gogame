@@ -25,7 +25,7 @@ type Figure interface {
 func (game *Game) Update() error {
 	dir := whichKeyPressed(game)
 	game.count++
-	game.fig.Update(dir)
+	game.fig = game.fig.Update(dir, game.level)
 	return nil
 }
 
@@ -43,7 +43,7 @@ func (game *Game) Layout(outsideWidth, outsideHeight int) (int, int) {
 
 func main() {
 	game := Game{
-		fig:   NewCharacter(Position{80, 60}),
+		fig:   NewCharacter(Rectangle{Position{80, 60}, Position{96, 76}}),
 		level: emptyLevel("empty", 160, 128, 16, 16),
 	}
 	ebiten.SetWindowSize(640, 512)

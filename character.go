@@ -28,9 +28,19 @@ type Position struct {
 	y int
 }
 
+type Dimension struct {
+	width  int
+	height int
+}
+
+type Rectangle struct {
+	upperLeft  Position
+	lowerRight Position
+}
+
 // Character bla
 type Character struct {
-	position      Position
+	bounds        Rectangle
 	dir           direction
 	counter       int
 	walkSprites   map[direction][]*ebiten.Image
@@ -55,10 +65,16 @@ func (character *Character) Attack(dir direction) {
 
 }
 
+func (character *Character) getBounds() Rectangle {
+	return character.bounds
+}
+
 // Draw bla
 func (character *Character) Draw(screen *ebiten.Image) {
 	options := ebiten.DrawImageOptions{}
-	options.GeoM.Translate(float64(character.position.x), float64(character.position.y))
+	options.GeoM.Translate(
+		float64(character.bounds.upperLeft.x), float64(character.bounds.upperLeft.y),
+	)
 	var sprite *ebiten.Image
 	if character.lastSprite == nil {
 		sprite = character.walkSprites[character.dir][(character.counter/10)%2]
@@ -70,27 +86,49 @@ func (character *Character) Draw(screen *ebiten.Image) {
 }
 
 // Move bla
-func (character *Character) Move(dx, dy int) {
-	character.position.x += dx
-	character.position.y += dy
+func (character Character) Move(dx, dy int) *Character {
+	newBounds := Rectangle{
+		Position{
+			character.bounds.upperLeft.x + dx,
+			character.bounds.upperLeft.y + dy,
+		},
+		Position{
+			character.bounds.lowerRight.x + dx,
+			character.bounds.lowerRight.y + dy,
+		},
+	}
+	return &Character{
+		bounds:        newBounds,
+		dir:           character.dir,
+		counter:       character.counter,
+		walkSprites:   character.walkSprites,
+		shieldSprites: character.shieldSprites,
+		attackSprites: character.attackSprites,
+		lastSprite:    character.lastSprite,
+		framesPerStep: character.framesPerStep,
+	}
 }
 
 //Update bla
-func (character *Character) Update(dir direction) {
+func (character Character) Update(dir direction, level *Level) *Character {
 	if dir != noDirection {
-		character.dir = dir
-		character.counter++
+		var newCharacter *Character
 		switch dir {
 		case up:
-			character.Move(0, -1)
+			newCharacter = character.Move(0, -1)
 		case down:
-			character.Move(0, 1)
+			newCharacter = character.Move(0, 1)
 		case left:
-			character.Move(-1, 0)
+			newCharacter = character.Move(-1, 0)
 		case right:
-			character.Move(1, 0)
+			newCharacter = character.Move(1, 0)
 		}
+		newCharacter.dir = dir
+		newCharacter.counter++
+		return newCharacter
 	}
+
+	return &character
 }
 
 func imgFromFile(filename string) image.Image {
@@ -156,7 +194,7 @@ func getShieldSprites() map[direction][]*image.NRGBA {
 }
 
 // NewCharacter returns an initialized Character struct
-func NewCharacter(pos Position) *Character {
+func NewCharacter(bounds Rectangle) *Character {
 	walkSprites := getWalkingSprites()
 	shieldSprites := getShieldSprites()
 	walkSpritesEb := make(map[direction][]*ebiten.Image)
@@ -172,7 +210,7 @@ func NewCharacter(pos Position) *Character {
 	}
 
 	return &Character{
-		position:      pos,
+		bounds:        bounds,
 		dir:           up,
 		walkSprites:   walkSpritesEb,
 		shieldSprites: shieldSpritesEb,
