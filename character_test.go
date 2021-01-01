@@ -134,6 +134,19 @@ func TestRectangleCollidesWith(t *testing.T) {
 				}},
 			want: false,
 		},
+		{
+			name: "Touching at the corner",
+			fields: fields{
+				upperLeft:  Position{3, 3},
+				lowerRight: Position{6, 6},
+			},
+			args: args{
+				r2: Rectangle{
+					Position{6, 6},
+					Position{9, 9},
+				}},
+			want: false,
+		},
 	}
 	for _, tt := range tests {
 		t.Run(tt.name, func(t *testing.T) {
