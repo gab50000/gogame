@@ -105,26 +105,11 @@ func (character *Character) Draw(screen *ebiten.Image) {
 
 // Move bla
 func (character Character) Move(dx, dy int) *Character {
-	newBounds := Rectangle{
-		Position{
-			character.bounds.upperLeft.x + dx,
-			character.bounds.upperLeft.y + dy,
-		},
-		Position{
-			character.bounds.lowerRight.x + dx,
-			character.bounds.lowerRight.y + dy,
-		},
-	}
-	return &Character{
-		bounds:        newBounds,
-		dir:           character.dir,
-		counter:       character.counter,
-		walkSprites:   character.walkSprites,
-		shieldSprites: character.shieldSprites,
-		attackSprites: character.attackSprites,
-		lastSprite:    character.lastSprite,
-		framesPerStep: character.framesPerStep,
-	}
+	character.bounds.upperLeft.x += dx
+	character.bounds.upperLeft.y += dy
+	character.bounds.lowerRight.x += dx
+	character.bounds.lowerRight.y += dy
+	return &character
 }
 
 //Update bla
