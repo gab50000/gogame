@@ -32,7 +32,7 @@ func (game *Game) Update() error {
 // Draw bla
 func (game *Game) Draw(screen *ebiten.Image) {
 	screen.Fill(color.RGBA{0, 255, 255, 255})
-	game.fig.Draw(screen)
+	game.fig.drawBounds(screen)
 	game.level.Draw(screen)
 }
 
@@ -42,9 +42,11 @@ func (game *Game) Layout(outsideWidth, outsideHeight int) (int, int) {
 }
 
 func main() {
+	level := emptyLevel("empty", 160, 128, 16, 16)
+	level.tiles = append(level.tiles, newColoredTile(Position{50, 70}, 4, 4, color.Black))
 	game := Game{
-		fig:   NewCharacter(Rectangle{Position{80, 60}, Position{96, 76}}),
-		level: emptyLevel("empty", 160, 128, 16, 16),
+		fig:   NewCharacter(Rectangle{Position{80, 60}, Position{95, 76}}),
+		level: level,
 	}
 	ebiten.SetWindowSize(640, 512)
 	ebiten.SetWindowTitle("The Game")

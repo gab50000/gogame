@@ -4,6 +4,7 @@ import (
 	"image"
 
 	//needed because of ebiten
+	"image/color"
 	_ "image/png"
 	"log"
 
@@ -38,18 +39,33 @@ type Rectangle struct {
 	lowerRight Position
 }
 
+/*
+ -------------------------------------> x
+| *----------------*
+| |                |
+| |      r1        |
+| |                |
+| |                |
+| |        *-------|--------*
+| |        |       |        |
+| *--------|-------*        |
+|          |      r2        |
+|          |                |
+|          *----------------*
+V y
+*/
 func (r1 Rectangle) collidesWith(r2 Rectangle) bool {
-	if r1.lowerRight.x >= r2.upperLeft.x &&
-		r1.lowerRight.y >= r2.upperLeft.y &&
-		r2.upperLeft.x > r1.upperLeft.x &&
-		r2.upperLeft.y > r1.upperLeft.y {
+	if r1.lowerRight.x > r2.upperLeft.x &&
+		r1.lowerRight.y > r2.upperLeft.y &&
+		r2.lowerRight.x > r1.upperLeft.x &&
+		r2.lowerRight.y > r1.upperLeft.y {
 		return true
 	}
 
-	if r2.lowerRight.x >= r1.upperLeft.x &&
-		r2.lowerRight.y >= r1.upperLeft.y &&
-		r1.upperLeft.x > r2.upperLeft.x &&
-		r1.upperLeft.y > r2.upperLeft.y {
+	if r2.lowerRight.x > r1.upperLeft.x &&
+		r2.lowerRight.y > r1.upperLeft.y &&
+		r1.lowerRight.x > r2.upperLeft.x &&
+		r1.lowerRight.y > r2.upperLeft.y {
 		return true
 	}
 
@@ -97,6 +113,21 @@ func (character *Character) Draw(screen *ebiten.Image) {
 	}
 
 	screen.DrawImage(sprite, &options)
+}
+
+func (character *Character) drawBounds(screen *ebiten.Image) {
+	options := ebiten.DrawImageOptions{}
+	options.GeoM.Translate(
+		float64(character.bounds.upperLeft.x), float64(character.bounds.upperLeft.y),
+	)
+
+	img := ebiten.NewImage(
+		character.bounds.lowerRight.x-character.bounds.upperLeft.x,
+		character.bounds.lowerRight.y-character.bounds.upperLeft.y,
+	)
+	img.Fill(color.NRGBA{255, 255, 0, 255})
+	screen.DrawImage(img, &options)
+	character.Draw(screen)
 }
 
 // Move bla

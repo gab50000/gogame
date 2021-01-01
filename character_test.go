@@ -5,7 +5,7 @@ import (
 	"testing"
 )
 
-func TestRectangle_collidesWith(t *testing.T) {
+func TestRectangleCollidesWith(t *testing.T) {
 	type fields struct {
 		upperLeft  Position
 		lowerRight Position
@@ -66,6 +66,71 @@ func TestRectangle_collidesWith(t *testing.T) {
 				r2: Rectangle{
 					Position{10, 1},
 					Position{10, 2},
+				}},
+			want: false,
+		},
+		{
+			name: "Intersection bottom right",
+			fields: fields{
+				upperLeft:  Position{0, 0},
+				lowerRight: Position{3, 3},
+			},
+			args: args{
+				r2: Rectangle{
+					Position{2, 2},
+					Position{4, 4},
+				}},
+			want: true,
+		},
+		{
+			name: "Intersection bottom left",
+			fields: fields{
+				upperLeft:  Position{3, 3},
+				lowerRight: Position{6, 6},
+			},
+			args: args{
+				r2: Rectangle{
+					Position{0, 2},
+					Position{7, 7},
+				}},
+			want: true,
+		},
+		{
+			name: "Intersection top left",
+			fields: fields{
+				upperLeft:  Position{3, 3},
+				lowerRight: Position{6, 6},
+			},
+			args: args{
+				r2: Rectangle{
+					Position{0, 0},
+					Position{4, 4},
+				}},
+			want: true,
+		},
+		{
+			name: "Intersection top right",
+			fields: fields{
+				upperLeft:  Position{3, 3},
+				lowerRight: Position{6, 6},
+			},
+			args: args{
+				r2: Rectangle{
+					Position{2, 2},
+					Position{4, 4},
+				}},
+			want: true,
+		},
+		{
+			name: "Touching at top",
+			fields: fields{
+				upperLeft:  Position{3, 3},
+				lowerRight: Position{6, 6},
+			},
+			args: args{
+				r2: Rectangle{
+					Position{2, 2},
+					Position{3, 3},
 				}},
 			want: false,
 		},
