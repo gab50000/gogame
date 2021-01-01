@@ -11,8 +11,8 @@ import (
 
 // Tile represents a level element
 type Tile struct {
-	position Position
-	img      *ebiten.Image
+	bounds Rectangle
+	img    *ebiten.Image
 }
 
 type Level struct {
@@ -22,14 +22,20 @@ type Level struct {
 
 func (tile *Tile) Draw(screen *ebiten.Image) {
 	options := ebiten.DrawImageOptions{}
-	options.GeoM.Translate(float64(tile.position.x), float64(tile.position.y))
+	options.GeoM.Translate(float64(tile.bounds.upperLeft.x), float64(tile.bounds.upperLeft.y))
 	screen.DrawImage(tile.img, &options)
 }
 
 func newColoredTile(pos Position, width, height int, color color.Color) *Tile {
 	blockImg := ebiten.NewImage(width, height)
 	blockImg.Fill(color)
-	return &Tile{pos, blockImg}
+	return &Tile{
+		bounds: Rectangle{
+			Position{pos.x, pos.y},
+			Position{pos.x + width, pos.y + height},
+		},
+		img: blockImg,
+	}
 }
 
 func (level *Level) Draw(screen *ebiten.Image) {

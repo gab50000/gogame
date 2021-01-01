@@ -38,6 +38,24 @@ type Rectangle struct {
 	lowerRight Position
 }
 
+func (r1 Rectangle) collidesWith(r2 Rectangle) bool {
+	if r1.lowerRight.x >= r2.upperLeft.x &&
+		r1.lowerRight.y >= r2.upperLeft.y &&
+		r2.upperLeft.x >= r1.upperLeft.x &&
+		r2.upperLeft.y >= r1.upperLeft.y {
+		return true
+	}
+
+	if r2.lowerRight.x >= r1.upperLeft.x &&
+		r2.lowerRight.y >= r1.upperLeft.y &&
+		r1.upperLeft.x >= r2.upperLeft.x &&
+		r1.upperLeft.y >= r2.upperLeft.y {
+		return true
+	}
+
+	return false
+}
+
 // Character bla
 type Character struct {
 	bounds        Rectangle
@@ -125,10 +143,23 @@ func (character Character) Update(dir direction, level *Level) *Character {
 		}
 		newCharacter.dir = dir
 		newCharacter.counter++
-		return newCharacter
+
+		if !newCharacter.collidesWithLevel(level) {
+			return newCharacter
+		}
 	}
 
 	return &character
+}
+
+func (character Character) collidesWithLevel(level *Level) bool {
+	for _, tile := range level.tiles {
+		if character.bounds.collidesWith(tile.bounds) {
+			log.Print("Collision detected!")
+			return true
+		}
+	}
+	return false
 }
 
 func imgFromFile(filename string) image.Image {
