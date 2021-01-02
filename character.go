@@ -140,28 +140,37 @@ func (character Character) Move(dx, dy int) *Character {
 }
 
 //Update bla
-func (character Character) Update(dir direction, level *Level) *Character {
-	if dir != noDirection {
-		var newCharacter *Character
+func (character Character) Update(dirs []direction, level *Level) *Character {
+	if len(dirs) == 0 {
+		return &character
+	}
+	newCharacter := &character
+	var newDir direction
+	for _, dir := range dirs {
+		dx, dy := 0, 0
 		switch dir {
 		case up:
-			newCharacter = character.Move(0, -1)
+			dy--
 		case down:
-			newCharacter = character.Move(0, 1)
+			dy++
 		case left:
-			newCharacter = character.Move(-1, 0)
+			dx--
 		case right:
-			newCharacter = character.Move(1, 0)
+			dx++
 		}
-		newCharacter.dir = dir
-		newCharacter.counter++
 
-		if !newCharacter.collidesWithLevel(level) {
-			return newCharacter
+		testCharacter := newCharacter.Move(dx, dy)
+
+		if !testCharacter.collidesWithLevel(level) {
+			newCharacter = testCharacter
 		}
+		newDir = dir
+
 	}
 
-	return &character
+	newCharacter.dir = newDir
+	newCharacter.counter++
+	return newCharacter
 }
 
 func (character Character) collidesWithLevel(level *Level) bool {

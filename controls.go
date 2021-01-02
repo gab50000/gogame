@@ -4,7 +4,7 @@ import (
 	"github.com/hajimehoshi/ebiten/v2"
 )
 
-func whichKeyPressed(game *Game) direction {
+func whichKeyPressed(game *Game) (directions []direction) {
 	for _, dirKey := range []ebiten.Key{
 		ebiten.KeyUp,
 		ebiten.KeyDown,
@@ -14,15 +14,15 @@ func whichKeyPressed(game *Game) direction {
 		if ebiten.IsKeyPressed(dirKey) {
 			switch dirKey {
 			case ebiten.KeyUp:
-				return up
+				directions = append(directions, up)
 			case ebiten.KeyDown:
-				return down
+				directions = append(directions, down)
 			case ebiten.KeyLeft:
-				return left
+				directions = append(directions, left)
 			case ebiten.KeyRight:
-				return right
+				directions = append(directions, right)
 			}
 		}
 	}
-	return noDirection
+	return directions
 }

@@ -23,9 +23,9 @@ type Figure interface {
 
 // Update bla
 func (game *Game) Update() error {
-	dir := whichKeyPressed(game)
+	dirs := whichKeyPressed(game)
 	game.count++
-	game.fig = game.fig.Update(dir, game.level)
+	game.fig = game.fig.Update(dirs, game.level)
 	return nil
 }
 
