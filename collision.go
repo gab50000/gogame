@@ -37,3 +37,8 @@ func (r1 Rectangle) collidesWith(r2 Rectangle) bool {
 
 	return false
 }
+
+func (r1 Rectangle) equals(r2 Rectangle) bool {
+	return r1.upperLeft.equals(r2.upperLeft) &&
+		r1.lowerRight.equals(r2.lowerRight)
+}

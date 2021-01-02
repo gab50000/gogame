@@ -29,6 +29,10 @@ type Position struct {
 	y int
 }
 
+func (p1 Position) equals(p2 Position) bool {
+	return p1.x == p2.x && p1.y == p2.y
+}
+
 type Dimension struct {
 	width  int
 	height int
@@ -130,8 +134,10 @@ func (character Character) Update(dirs []direction, level *Level) *Character {
 
 	}
 
-	newCharacter.dir = newDir
-	newCharacter.counter++
+	if !newCharacter.bounds.equals(character.bounds) {
+		newCharacter.dir = newDir
+		newCharacter.counter++
+	}
 	return newCharacter
 }
 
