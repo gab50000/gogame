@@ -1,4 +1,4 @@
-module github.com/gab50000/game
+module github.com/gab50000/gogame
 
 go 1.15
 

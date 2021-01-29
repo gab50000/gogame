@@ -33,6 +33,7 @@ func (p1 Position) equals(p2 Position) bool {
 	return p1.x == p2.x && p1.y == p2.y
 }
 
+// Dimension bla
 type Dimension struct {
 	width  int
 	height int

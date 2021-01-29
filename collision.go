@@ -1,5 +1,6 @@
 package main
 
+// Rectangle is used for collision detection
 type Rectangle struct {
 	upperLeft  Position
 	lowerRight Position
