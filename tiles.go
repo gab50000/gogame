@@ -33,18 +33,6 @@ func newColoredTile(pos Position, width, height int, color color.Color) *Tile {
 	}
 }
 
-func newRandomTile(pos Position, width, height int, color color.Color) *Tile {
-	randImg := newRandomImage(width, height)
-	blockImg := ebiten.NewImageFromImage(randImg)
-	return &Tile{
-		bounds: Rectangle{
-			Position{pos.x, pos.y},
-			Position{pos.x + width, pos.y + height},
-		},
-		img: blockImg,
-	}
-}
-
 func newRandomImage(width, height int) *image.RGBA {
 	upLeft := image.Point{0, 0}
 	lowRight := image.Point{width, height}
@@ -59,6 +47,17 @@ func newRandomImage(width, height int) *image.RGBA {
 	return img
 }
 
-func newTileFromImage(pos Position, width, height int, image *image.Image) *Tile {
-	return &Tile{}
+func newTileFromImage(pos Position, width, height int, image *image.RGBA) *Tile {
+	return &Tile{
+		bounds: Rectangle{
+			pos,
+			Position{pos.x + width, pos.y + height},
+		},
+		img: ebiten.NewImageFromImage(image),
+	}
+}
+
+func newRandomTile(pos Position, width, height int, color color.Color) *Tile {
+	randImg := newRandomImage(width, height)
+	return newTileFromImage(pos, width, height, randImg)
 }
