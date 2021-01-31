@@ -80,6 +80,11 @@ func newRandomTile(pos Position, width, height int, color color.Color) *Tile {
 func newGrassTile(pos Position, width, height int) *Tile {
 	img := newColoredImageWithFeatures(
 		width, height, 50, color.RGBA{0, 255, 0, 255}, color.RGBA{0, 200, 0, 255})
+	return newTileFromImage(pos, width, height, img)
+}
 
+func newEarthTile(pos Position, width, height int) *Tile {
+	img := newColoredImageWithFeatures(
+		width, height, 50, color.RGBA{95, 46, 0, 255}, color.RGBA{89, 35, 0, 255})
 	return newTileFromImage(pos, width, height, img)
 }

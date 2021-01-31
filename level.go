@@ -50,7 +50,7 @@ func emptyLevel(levelName string, width, height, blockWidth, blockHeight int) *L
 		tiles = append(
 			tiles,
 			newGrassTile(Position{i * blockWidth, 0}, blockWidth, blockHeight),
-			newGrassTile(Position{i * blockWidth, height - blockHeight}, blockWidth, blockHeight),
+			newEarthTile(Position{i * blockWidth, height - blockHeight}, blockWidth, blockHeight),
 		)
 	}
 
