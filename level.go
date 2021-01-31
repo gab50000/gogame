@@ -58,7 +58,7 @@ func emptyLevel(levelName string, width, height, blockWidth, blockHeight int) *L
 		tiles = append(
 			tiles,
 			newColoredTile(Position{0, j * blockHeight}, blockWidth, blockHeight, color.Black),
-			newColoredTile(Position{width - blockWidth, j * blockHeight}, blockWidth, blockHeight, color.Black))
+			newWaterTile(Position{width - blockWidth, j * blockHeight}, blockWidth, blockHeight))
 	}
 
 	return &Level{levelName, tiles}

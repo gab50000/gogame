@@ -88,3 +88,8 @@ func newEarthTile(pos Position, width, height int) *Tile {
 		width, height, 50, color.RGBA{95, 46, 0, 255}, color.RGBA{89, 35, 0, 255})
 	return newTileFromImage(pos, width, height, img)
 }
+
+func newWaterTile(pos Position, width, height int) *Tile {
+	img := newColoredImage(width, height, color.RGBA{0, 0, 255, 255})
+	return newTileFromImage(pos, width, height, img)
+}
