@@ -49,8 +49,8 @@ func emptyLevel(levelName string, width, height, blockWidth, blockHeight int) *L
 	for i := 0; i < width/blockWidth; i++ {
 		tiles = append(
 			tiles,
-			newRandomTile(Position{i * blockWidth, 0}, blockWidth, blockHeight, color.Black),
-			newRandomTile(Position{i * blockWidth, height - blockHeight}, blockWidth, blockHeight, color.Black),
+			newGrassTile(Position{i * blockWidth, 0}, blockWidth, blockHeight),
+			newGrassTile(Position{i * blockWidth, height - blockHeight}, blockWidth, blockHeight),
 		)
 	}
 
