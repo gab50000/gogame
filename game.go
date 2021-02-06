@@ -1,8 +1,7 @@
-package main
+package gogame
 
 import (
 	"image/color"
-	"log"
 
 	"github.com/hajimehoshi/ebiten/v2"
 )
@@ -23,7 +22,7 @@ type Figure interface {
 
 // Update bla
 func (game *Game) Update() error {
-	dirs := whichKeyPressed(game)
+	dirs := WhichKeyPressed(game)
 	game.count++
 	game.fig = game.fig.Update(dirs, game.level)
 	return nil
@@ -39,18 +38,4 @@ func (game *Game) Draw(screen *ebiten.Image) {
 // Layout determines the canvas size / number of individually drawable pixels
 func (game *Game) Layout(outsideWidth, outsideHeight int) (int, int) {
 	return outsideWidth / 2, outsideHeight / 2
-}
-
-func main() {
-	level := emptyLevel("empty", 320, 256, 16, 16)
-	level.tiles = append(level.tiles, newColoredTile(Position{50, 70}, 4, 4, color.Black))
-	game := Game{
-		fig:   NewCharacter(Rectangle{Position{80, 60}, Position{95, 76}}),
-		level: level,
-	}
-	ebiten.SetWindowSize(640, 512)
-	ebiten.SetWindowTitle("The Game")
-	if err := ebiten.RunGame(&game); err != nil {
-		log.Fatal(err)
-	}
 }

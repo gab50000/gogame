@@ -1,4 +1,4 @@
-package main
+package gogame
 
 import (
 	_ "image/png"
@@ -151,8 +151,8 @@ func TestRectangleCollidesWith(t *testing.T) {
 	for _, tt := range tests {
 		t.Run(tt.name, func(t *testing.T) {
 			r1 := Rectangle{
-				upperLeft:  tt.fields.upperLeft,
-				lowerRight: tt.fields.lowerRight,
+				UpperLeft:  tt.fields.upperLeft,
+				LowerRight: tt.fields.lowerRight,
 			}
 			if got := r1.collidesWith(tt.args.r2); got != tt.want {
 				t.Errorf("Rectangle.collidesWith() = %v, want %v", got, tt.want)

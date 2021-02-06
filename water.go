@@ -1,4 +1,4 @@
-package main
+package gogame
 
 type Water struct {
 	tiles []*Tile
@@ -14,7 +14,7 @@ func (water Water) getPositions() []Position {
 	positions := make([]Position, 0)
 
 	for _, tile := range water.tiles {
-		positions = append(positions, tile.bounds.lowerRight)
+		positions = append(positions, tile.bounds.LowerRight)
 	}
 	return positions
 }
@@ -34,7 +34,7 @@ func (water Water) getMoves() []Move {
 func (water Water) calcEnergy() int {
 	energy := 0
 	for _, tile := range water.tiles {
-		energy += tile.bounds.lowerRight.y
+		energy += tile.bounds.LowerRight.y
 	}
 	return energy
 }

@@ -1,4 +1,4 @@
-package main
+package gogame
 
 import (
 	"image"
@@ -70,7 +70,7 @@ func (character *Character) Attack(dir direction) {
 func (character *Character) Draw(screen *ebiten.Image) {
 	options := ebiten.DrawImageOptions{}
 	options.GeoM.Translate(
-		float64(character.bounds.upperLeft.x), float64(character.bounds.upperLeft.y),
+		float64(character.bounds.UpperLeft.x), float64(character.bounds.UpperLeft.y),
 	)
 	var sprite *ebiten.Image
 	if character.lastSprite == nil {
@@ -85,12 +85,12 @@ func (character *Character) Draw(screen *ebiten.Image) {
 func (character *Character) drawBounds(screen *ebiten.Image) {
 	options := ebiten.DrawImageOptions{}
 	options.GeoM.Translate(
-		float64(character.bounds.upperLeft.x), float64(character.bounds.upperLeft.y),
+		float64(character.bounds.UpperLeft.x), float64(character.bounds.UpperLeft.y),
 	)
 
 	img := ebiten.NewImage(
-		character.bounds.lowerRight.x-character.bounds.upperLeft.x,
-		character.bounds.lowerRight.y-character.bounds.upperLeft.y,
+		character.bounds.LowerRight.x-character.bounds.UpperLeft.x,
+		character.bounds.LowerRight.y-character.bounds.UpperLeft.y,
 	)
 	img.Fill(color.NRGBA{255, 255, 0, 255})
 	screen.DrawImage(img, &options)
@@ -99,10 +99,10 @@ func (character *Character) drawBounds(screen *ebiten.Image) {
 
 // Move bla
 func (character Character) Move(dx, dy int) *Character {
-	character.bounds.upperLeft.x += dx
-	character.bounds.upperLeft.y += dy
-	character.bounds.lowerRight.x += dx
-	character.bounds.lowerRight.y += dy
+	character.bounds.UpperLeft.x += dx
+	character.bounds.UpperLeft.y += dy
+	character.bounds.LowerRight.x += dx
+	character.bounds.LowerRight.y += dy
 	return &character
 }
 
@@ -143,7 +143,7 @@ func (character Character) Update(dirs []direction, level *Level) *Character {
 }
 
 func (character Character) collidesWithLevel(level *Level) bool {
-	for _, tile := range level.tiles {
+	for _, tile := range level.Tiles {
 		if character.bounds.collidesWith(tile.bounds) {
 			log.Print("Collision detected!")
 			return true

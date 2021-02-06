@@ -1,10 +1,10 @@
-package main
+package gogame
 
 import (
 	"github.com/hajimehoshi/ebiten/v2"
 )
 
-func whichKeyPressed(game *Game) (directions []direction) {
+func WhichKeyPressed(game *Game) (directions []direction) {
 	for _, dirKey := range []ebiten.Key{
 		ebiten.KeyUp,
 		ebiten.KeyDown,

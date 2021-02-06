@@ -1,9 +1,9 @@
-package main
+package gogame
 
 // Rectangle is used for collision detection
 type Rectangle struct {
-	upperLeft  Position
-	lowerRight Position
+	UpperLeft  Position
+	LowerRight Position
 }
 
 /*
@@ -22,17 +22,17 @@ type Rectangle struct {
 V y
 */
 func (r1 Rectangle) collidesWith(r2 Rectangle) bool {
-	if r1.lowerRight.x > r2.upperLeft.x &&
-		r1.lowerRight.y > r2.upperLeft.y &&
-		r2.lowerRight.x > r1.upperLeft.x &&
-		r2.lowerRight.y > r1.upperLeft.y {
+	if r1.LowerRight.x > r2.UpperLeft.x &&
+		r1.LowerRight.y > r2.UpperLeft.y &&
+		r2.LowerRight.x > r1.UpperLeft.x &&
+		r2.LowerRight.y > r1.UpperLeft.y {
 		return true
 	}
 
-	if r2.lowerRight.x > r1.upperLeft.x &&
-		r2.lowerRight.y > r1.upperLeft.y &&
-		r1.lowerRight.x > r2.upperLeft.x &&
-		r1.lowerRight.y > r2.upperLeft.y {
+	if r2.LowerRight.x > r1.UpperLeft.x &&
+		r2.LowerRight.y > r1.UpperLeft.y &&
+		r1.LowerRight.x > r2.UpperLeft.x &&
+		r1.LowerRight.y > r2.UpperLeft.y {
 		return true
 	}
 
@@ -40,6 +40,6 @@ func (r1 Rectangle) collidesWith(r2 Rectangle) bool {
 }
 
 func (r1 Rectangle) equals(r2 Rectangle) bool {
-	return r1.upperLeft.equals(r2.upperLeft) &&
-		r1.lowerRight.equals(r2.lowerRight)
+	return r1.UpperLeft.equals(r2.UpperLeft) &&
+		r1.LowerRight.equals(r2.LowerRight)
 }
