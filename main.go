@@ -29,7 +29,7 @@ func (game *Game) Update() error {
 	return nil
 }
 
-// Draw bla
+// Draw draws the game including the level and all characters
 func (game *Game) Draw(screen *ebiten.Image) {
 	screen.Fill(color.RGBA{0, 255, 255, 255})
 	game.fig.drawBounds(screen)
@@ -38,11 +38,11 @@ func (game *Game) Draw(screen *ebiten.Image) {
 
 // Layout determines the canvas size / number of individually drawable pixels
 func (game *Game) Layout(outsideWidth, outsideHeight int) (int, int) {
-	return outsideWidth / 4, outsideHeight / 4
+	return outsideWidth / 2, outsideHeight / 2
 }
 
 func main() {
-	level := emptyLevel("empty", 160, 128, 16, 16)
+	level := emptyLevel("empty", 320, 256, 16, 16)
 	level.tiles = append(level.tiles, newColoredTile(Position{50, 70}, 4, 4, color.Black))
 	game := Game{
 		fig:   NewCharacter(Rectangle{Position{80, 60}, Position{95, 76}}),
